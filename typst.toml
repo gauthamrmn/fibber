@@ -1,0 +1,12 @@
+[package]
+name = "microfabrication"
+version = "0.6.1"
+entrypoint = "lib.typ"
+authors = ["Gautham Ramanarayanan"]
+license = "MIT"
+description = "A CeTZ package for creating microfabrication process diagrams in typst."
+repository = ""
+keywords = ["diagram","microfabrication","fabrication"]
+categories = [""]
+exclude = ["examples"]
+compiler = "0.13.1"
