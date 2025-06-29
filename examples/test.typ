@@ -1,10 +1,11 @@
 #import "../src/exports.typ": *
 
-
-#let Si = luma(120)
-#let LN = olive
-#let Pt = gray
-#let Au = yellow
+#let materials = (
+  Si: luma(120),
+  LN: olive,
+  Pt: gray,
+  Au: yellow,
+)
 
 #let electrode-pattern = ((left, middle, right)) => (
   (left + 0.5, left + 1.25),
@@ -20,50 +21,51 @@
 )
 
 
-#let func(param1: none, param2: none) = {
-  draw.rect((0,0),(1,1))
-}
-
-#func(param1: "Hello").fields()
-
-#device(
-  materials: (
-    Si: Si,
-    LN: LN,
-    Pt: Pt,
-    Au: Au,
-  ),
+#let device1 = device-steps(
+  display-steps: (1, 2, 4, 5),
+  materials: materials,
   steps: (
-    (
-      process: "deposit",
+    deposit(
       material: "Si",
     ),
-    (
-      process: "deposit",
+    deposit(
       material: "LN",
     ),
-    (
-      process: "etch",
-      height: 1.05,
-      pattern: release-hole-etch-pattern
+    etch(
+      pattern: release-hole-etch-pattern,
     ),
-    (
-      process: "deposit",
-      height: 0.5,
+    deposit(
       material: "Pt",
-      pattern: electrode-pattern
-    ), 
-    (
-      process: "deposit",
-      height: 0.5,
+      pattern: electrode-pattern,
+      height: 0.5
+    ),
+    deposit(
       material: "Au",
-      pattern: electrode-pattern
+      pattern: electrode-pattern,
+      height: 0.5,
     ),
-    (
-      process: "etch",
+    etch(
       start-layer: 0,
-      height: 1,
-      pattern: ((left, middle, right)) => ((left + 0.5, right - 0.5),)
-    ),
-  ),
+      pattern: ((left,middle,right)) => ((left + 0.5, right - 0.5),)
+    )
+  ), 
+)
+
+#let step-desc = (
+  [1. Sample Transfer],
+  [2. Release Hole Etch],
+  [3. Electrode Deposition],
+  [4. XeF2 Release],
+)
+
+#grid(
+  columns: (1fr, 1fr),
+  column-gutter: 5%,
+  row-gutter: 5%,
+  ..device1.zip(step-desc).map(
+    pair => [
+      #pair.at(0)
+      #pair.at(1)
+    ]
+  )
 )
