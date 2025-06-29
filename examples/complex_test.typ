@@ -1,4 +1,5 @@
 #import "../src/exports.typ": *
+#import "@preview/typsium:0.2.0": ce
 
 #let materials = (
   "aSi": gray,
@@ -78,16 +79,11 @@
   [5. Release Window Etch],
   [6. XeF2 Release],
 )
-#grid(
-  columns: (1fr,1fr,1fr),
-  column-gutter: 5%,
-  row-gutter: 5%,
-  ..device.zip(step-desc).map(
-    pair => [
-      #block()[
-        #pair.at(0)
-        #pair.at(1)
-      ]
-    ]
-  )
+#step-diagram(
+  device-steps: device,
+  columns: 3,
+  step-desc: step-desc,
+  legend: format-legend(columns: 2, materials: materials),
 )
+
+
