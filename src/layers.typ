@@ -24,16 +24,24 @@
   
   (layer-height, current-layer, materials, device-anchors, background-color) => {
     let layer = current-layer
-    if start-layer != none {
+    if type(start-layer) == int or type(start-layer) == float or type(start-layer) == decimal {
       layer = start-layer
+    } else if type(start-layer) == function {
+      layer = start-layer(current-layer)
+    } else if start-layer == none {
+      layer = current-layer
+    } else {
+      panic("start-layer has invalid type")
     }
+
+
     // code to make it so that if you specify start-layer below or above current-layer, layer does not increment
     let layer-increment = 0
     if start-layer == none {
       layer-increment = height
     } else if current-layer == start-layer {
       layer-increment = height
-    }
+    }     
     ( 
      layer-increment,
       for p in pattern(device-anchors) {
@@ -46,8 +54,14 @@
 #let etch(height: 1, pattern: ((left, middle, right)) => ((left, right),), start-layer: none) = {
   (layer-height, current-layer, materials, device-anchors, background-color) => {
     let layer = current-layer - 1
-    if start-layer != none {
-      layer = start-layer 
+    if type(start-layer) == int or type(start-layer) == float or type(start-layer) == decimal {
+      layer = start-layer
+    } else if type(start-layer) == function {
+      layer = start-layer(current-layer)
+    } else if start-layer == none {
+      layer = current-layer - 1
+    } else {
+      panic("start-layer has invalid type")
     }
     let layer-increment = 0
     (
@@ -59,6 +73,23 @@
   }
 }
 
+#let set-active-layer(new-layer: current-layer => current-layer) = {
+  (layer-height, current-layer, materials, device-anchors, background-color) => {
+    let layer = 0
+    if type(new-layer) == int or type(new-layer) == float or type(new-layer) == decimal {
+      layer = new-layer
+    } else if type(new-layer) == function {
+      layer = new-layer(current-layer)
+    } else {
+      panic("new-layer has invalid type")
+    }
+    let layer-increment = layer - current-layer
+    (
+      layer-increment,
+      ()
+    )
+  }
+}
 
 #let device(width: 8, layer-height: 1, background-color: white, materials: (), steps: ()) = {
   let device-anchors = ( (left: 0, middle: width/2, right: width) )

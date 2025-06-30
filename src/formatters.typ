@@ -26,16 +26,36 @@
   )
 }
 
+#let modded-zip(..args) = {
+  let arrays = args.pos()
+  let length = calc.max(..arrays.map(arr => arr.len()))
+  let output = ()
+  for i in range(0,length) {
+    let group = ()
+    for a in arrays {
+      if (i >= a.len()) {
+        continue
+      }
+      group.push(a.at(i))
+    }
+    output.push(group)
+  }
+  output
+}
 #let step-diagram(device-steps: (), step-desc: (), legend: [], columns: 1, column-gutter: 5%, row-gutter: 5%) = {
   grid(
     columns: columns,
     column-gutter: column-gutter,
     row-gutter: row-gutter,
-    ..device-steps.zip(step-desc).map(
+    ..modded-zip(device-steps, step-desc).map(
       pair => [
         #block()[
-          #pair.at(0)
-          #pair.at(1)
+          #if pair.len() == 2 [
+            #pair.at(0)
+            #pair.at(1)
+          ] else [
+            #pair.at(0)
+          ]
         ]
       ]
     ),
