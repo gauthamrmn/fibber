@@ -103,7 +103,7 @@
   })
 }
 
-#let device-height(width: 8, layer-height: 1, background-color: white, materials: (), steps: ()) = {
+#let device-height(width: 8, layer-height: 1, background-color: white, materials: (:), steps: ()) = {
   let device-anchors = ( (left: 0, middle: width/2, right: width) )
   let layer = 0
   for s in steps {
